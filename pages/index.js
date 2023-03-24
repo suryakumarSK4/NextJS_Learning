@@ -28,6 +28,8 @@ export default function Home() {
           <Link href="/ssgdynamicprops">Dynamic props</Link>
           <br />
           <Link href="/news">News</Link>
+          <br />
+          <Link href="/comment">Comments</Link>
         </p>
       </main>
     </>

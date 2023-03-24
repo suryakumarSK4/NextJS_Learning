@@ -4,12 +4,13 @@ export default function CommentsPage() {
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
 
-  const fetchCommands = async () => {
+  // ! Fetch data from api server
+  const fetchComments = async () => {
     const response = await fetch("api/comment");
     const res = await response.json();
     setComments(res);
   };
-  // ! Post req to the server
+  // ! Post data from api server
   const postComment = async () => {
     const response = await fetch("api/comment", {
       method: "POST",
@@ -22,6 +23,29 @@ export default function CommentsPage() {
     console.log(result);
     setComment("");
   };
+  // ! Patch data from api server
+  const patchComment = async (cmtId, cmtText) => {
+    const response = await fetch("api/comment", {
+      method: "PATCH",
+      body: JSON.stringify({ id: cmtId, text: cmtText }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const result = await response.json();
+    console.log(result);
+    setComment("");
+  };
+  // ! Delete data from api server
+  const deleteComment = async (cmtId) => {
+    const response = await fetch(`api/comment/${cmtId}`, {
+      method: "DELETE",
+    });
+    const result = await response.json();
+    console.log(result);
+    fetchComments();
+  };
+
   return (
     <div>
       <h1>CommentsPage</h1>
@@ -31,12 +55,19 @@ export default function CommentsPage() {
         onChange={(e) => setComment(e.target.value)}
       />
       <button onClick={postComment}>Post Comment</button>
-      <button onClick={fetchCommands}>Load Comments</button>
+      <button onClick={fetchComments}>Load Comments</button>
       {comments.map((comment) => {
         return (
-          <h5>
+          <h5 key={comment.id}>
             {comment.id} &nbsp;
-            {comment.text}
+            {comment.text}&nbsp;
+            <button onClick={() => deleteComment(comment.id)}>
+              Delete
+            </button>{" "}
+            &nbsp;
+            <button onClick={() => patchComment(comment.id, comment)}>
+              Patch Comment
+            </button>
           </h5>
         );
       })}
